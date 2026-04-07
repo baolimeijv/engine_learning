@@ -13,17 +13,71 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Bresenham.h">
+      <UniqueIdentifier>{7cbf83f7-0837-44af-8953-3e9fd0bdc8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Bresenham.cpp">
+      <UniqueIdentifier>{9db3c9e4-f931-4207-b943-bb91962f17eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="笔记.md">
+      <UniqueIdentifier>{8c7631da-28b6-4824-8ebd-be28a7f8c9a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="memory_pool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="shared_ptr.cpp">
+    <ClCompile Include="vector3.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_line.cpp">
+      <Filter>源文件\Bresenham.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="framebuffer.cpp">
+      <Filter>源文件\Bresenham.cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
-    <None Include="memory_pool.md" />
+    <None Include="matrix4.md">
+      <Filter>笔记.md</Filter>
+    </None>
+    <None Include="memory_pool.md">
+      <Filter>笔记.md</Filter>
+    </None>
+    <None Include="README.md">
+      <Filter>笔记.md</Filter>
+    </None>
+    <None Include="shared_ptr.md">
+      <Filter>笔记.md</Filter>
+    </None>
+    <None Include="vector3.md">
+      <Filter>笔记.md</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vector3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_ptr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="framebuffer.h">
+      <Filter>头文件\Bresenham.h</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_line.h">
+      <Filter>头文件\Bresenham.h</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
