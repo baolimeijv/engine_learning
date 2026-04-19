@@ -1,12 +1,15 @@
 #include <iostream>
 #include <cmath>
+#include <SFML/Graphics.hpp>
 #include "vector3.h"
 #include "matrix4.h"
 #include"shared_ptr.h"
 #include"memory_pool.h"
 #include "framebuffer.h"
 #include "draw_line.h"
-#include <SFML/Graphics.hpp>
+#include"Triangle.h"
+#include<vector>
+
 int pool_test()
 {
     pool p;
@@ -109,6 +112,208 @@ void matrix4_test()
     vector3 p4 = S.transformPoint(vector3(1, 2, 3));
     std::cout << "缩放2倍 (1,2,3) -> " << p4 << std::endl; // 应 (2,4,6)
 }
+void draw_line_test()
+{
+    Framebuffer fb(800, 600);
+    Color red(255, 0, 0);
+    Color green(0, 255, 0);
+    Color blue(0, 0, 255);
+
+    draw_line(fb, 100, 100, 700, 500, red);
+    draw_line(fb, 100, 500, 700, 100, green);
+    draw_line(fb, 100, 300, 700, 300, blue);
+
+    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "Line Test");
+    window.setFramerateLimit(60);
+
+    while (window.isOpen())
+    {
+        // 处理窗口事件
+        while (auto event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+        }
+
+        // 清空窗口（黑色背景）
+        window.clear(sf::Color::Black);
+
+        // 用你的 draw_line 函数画三条不同颜色的直线
+
+        draw_line(window, 100, 100, 700, 500, sf::Color::Red);    // 红色对角线
+        draw_line(window, 100, 500, 700, 100, sf::Color::Green);  // 绿色对角线
+        draw_line(window, 100, 300, 700, 300, sf::Color::Blue);   // 蓝色水平线
+
+
+        // 显示绘制内容
+        window.display();
+    }
+}
+void draw_Triangle_test()
+{
+    const int W = 800, H = 800;
+    Framebuffer fb(W, H);
+
+    Triangle triangle1(
+        vector3(100, 100, 0.5f), vector3(700, 400, 0.5f), vector3(100, 700, 0.5f),
+        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255)
+    );
+
+    Triangle triangle2(
+        vector3(0, 100, 0.5f), vector3(800, 400, 0.5f), vector3(100, 800, 0.5f),
+        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255)
+    );
+
+    sf::RenderWindow window(sf::VideoMode({ W, H }), "Triangle Test");
+    window.setFramerateLimit(60);
+
+    while (window.isOpen())
+    {
+        while (auto event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+        }
+
+        fb.clear(Color(0,0,0));
+        fb.clearDepth();
+
+        std::vector<std::vector<vector3>> heartTriangles =
+        {
+            //左边
+            {{250,100.0} ,{410,250,0},{400,700,0}},
+            {{250,100.0} ,{400,700,0},{50,400,0}},
+            {{250,100.0} ,{50,400,0}, {50,200,0}},
+            {{250,100.0} ,{50,200,0},{130,100,0}},
+            //对称
+            {{550,100.0} ,{390,250,0},{400,700,0}},
+            {{550,100.0} ,{400,700,0},{750,400,0}},
+            {{550,100.0} ,{750,400,0},{750,200,0}},
+            {{550,100.0} ,{750,200,0},{670,100,0}},
+
+        };
+        triangle1.draw_Triangle(fb);
+        triangle2.draw_Triangle(fb);
+        for (auto& tri : heartTriangles) 
+        {
+          Triangle t(tri[0], tri[1], tri[2], Color(255,0,0), Color(255,0,0), Color(255,0,0));
+         t.draw_Triangle(fb);
+        }
+
+        sf::Image image(sf::Vector2u(W, H));
+        for (int y = 0; y < H; y++)
+        {
+            for (int x = 0; x < W; x++) 
+            {
+                Color c = fb.get_pixels(x,y);
+                image.setPixel(sf::Vector2u(x, y), sf::Color(c.r, c.g, c.b));
+            }
+        }
+
+        sf::Texture texture;
+        (void)texture.loadFromImage(image);
+        sf::Sprite sprite(texture);
+        window.draw(sprite);
+
+        window.display();
+    }
+}
+void rotating_cube_test()
+{
+    const int w = 800, h = 800;
+    Framebuffer fb(w, h);
+    sf::RenderWindow window(sf::VideoMode({ w, h }), "Rotating Cube");
+    window.setFramerateLimit(60);
+
+    // 顶点（局部坐标）
+    vector3 cubeVertex[8] = {
+        {-1,-1,-1}, { 1,-1,-1}, { 1, 1,-1}, {-1, 1,-1},  // 前面四个 (z=-1)
+        {-1,-1, 1}, { 1,-1, 1}, { 1, 1, 1}, {-1, 1, 1}    // 后面四个 (z=1)
+    };
+
+    // 12 个三角形（每个面两个，逆时针绕序，从外部看）
+    int cubeface[12][3] = {
+        {0,1,2}, {0,2,3}, // 前面
+        {5,4,7}, {5,7,6}, // 后面
+        {0,4,5}, {0,5,1}, // 底面
+        {2,6,7}, {2,7,3}, // 顶面
+        {0,3,7}, {0,7,4}, // 左面
+        {1,5,6}, {1,6,2}  // 右面
+    };
+
+    // 每个三角形的颜色
+    Color cubeColors[12] = {
+        Color(255,0,0), Color(255,0,0),   // 前面红色
+        Color(0,255,0), Color(0,255,0),   // 后面绿色
+        Color(0,0,255), Color(0,0,255),   // 底面蓝色
+        Color(255,255,0), Color(255,255,0), // 顶面黄色
+        Color(255,0,255), Color(255,0,255), // 左面紫色
+        Color(0,255,255), Color(0,255,255)  // 右面青色
+    };
+
+    float angle = 0;
+
+    while (window.isOpen())
+    {
+        while (auto event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+        }
+
+        fb.clear(Color(0, 0, 0));
+        fb.clearDepth();
+
+        matrix4 model = matrix4::rotationZ(angle)*matrix4::rotationX(2*angle)*matrix4::rotationY(angle);
+        matrix4 view = matrix4::translation(0, 0, -5);
+        matrix4 proj = matrix4::perspective(3.141592f / 3, (float)w / h, 0.1f, 1000.0f);
+        matrix4 mvp = proj * view * model;
+
+        vector3 screenVertex[8];
+
+        for (int i = 0; i < 8; ++i)
+        {
+            const vector3& v = cubeVertex[i];
+            float cx = mvp.get_m(0, 0) * v.get_xyz('x') + mvp.get_m(0, 1) * v.get_xyz('y') + mvp.get_m(0, 2) * v.get_xyz('z') + mvp.get_m(0, 3);
+            float cy = mvp.get_m(1, 0) * v.get_xyz('x') + mvp.get_m(1, 1) * v.get_xyz('y') + mvp.get_m(1, 2) * v.get_xyz('z') + mvp.get_m(1, 3);
+            float cz = mvp.get_m(2, 0) * v.get_xyz('x') + mvp.get_m(2, 1) * v.get_xyz('y') + mvp.get_m(2, 2) * v.get_xyz('z') + mvp.get_m(2, 3);
+            float cw = mvp.get_m(3, 0) * v.get_xyz('x') + mvp.get_m(3, 1) * v.get_xyz('y') + mvp.get_m(3, 2) * v.get_xyz('z') + mvp.get_m(3, 3);
+
+            float ndc_x = cx / cw;
+            float ndc_y = cy / cw;
+            float ndc_z = cz / cw;
+
+            float depth = (ndc_z + 1.0f) * 0.5f;
+            float screen_x = (ndc_x + 1.0f) * 0.5f * w;
+            float screen_y = (1.0f - ndc_y) * 0.5f * h;
+
+            screenVertex[i].set(screen_x, screen_y, depth); // 使用 setter
+        }
+
+        for (int i = 0; i < 12; i++) {
+            Triangle tri(screenVertex[cubeface[i][0]],screenVertex[cubeface[i][1]],screenVertex[cubeface[i][2]]
+                ,cubeColors[i], cubeColors[i], cubeColors[i]);
+            tri.draw_Triangle(fb);
+        }
+
+        // 显示...
+        sf::Image image(sf::Vector2u(w, h));
+        for (int y = 0; y < h; ++y)
+            for (int x = 0; x < w; ++x) 
+            {
+                Color c = fb.get_pixels(x, y);
+                image.setPixel(sf::Vector2u(x, y), sf::Color(c.r, c.g, c.b));
+            }
+        sf::Texture texture;
+        (void)texture.loadFromImage(image);
+        sf::Sprite sprite(texture);
+        window.draw(sprite);
+        window.display();
+
+        angle += 0.03f;
+    }
+}
+
 int main()
 {
     //内存池测试
@@ -119,39 +324,11 @@ int main()
     vector3_test();
     //matrix4测试
     matrix4_test();
+    //bresenham画线算法测试
+    //draw_line_test();
+    //重心填充三角形绘制爱心测试
+    //draw_Triangle_test();
+    //旋转立方体测试
+    rotating_cube_test();
 
-    Framebuffer fb(800, 600);
-    Color red(255, 0, 0);
-    Color green(0, 255, 0);
-    Color blue(0, 0, 255);
-
-    draw_line(fb, 100, 100, 700, 500, red);
-    draw_line(fb, 100, 500, 700, 100, green);
-    draw_line(fb, 100, 300, 700, 300, blue);
-
-     sf::RenderWindow window(sf::VideoMode({800, 600}), "Line Test");
-    window.setFramerateLimit(60);
-
-    while (window.isOpen()) 
-    {
-        // 处理窗口事件
-        while (auto event = window.pollEvent()) 
-        {
-            if (event->is<sf::Event::Closed>())
-                window.close();
-        }
-
-        // 清空窗口（黑色背景）
-        window.clear(sf::Color::Black);
-
-        // 用你的 draw_line 函数画三条不同颜色的直线
-     
-            draw_line(window, 100, 100, 700, 500, sf::Color::Red);    // 红色对角线
-            draw_line(window, 100, 500, 700, 100, sf::Color::Green);  // 绿色对角线
-            draw_line(window, 100, 300, 700, 300, sf::Color::Blue);   // 蓝色水平线
-
-
-            // 显示绘制内容
-            window.display();
-    }
 }

@@ -16,5 +16,5 @@
 
 - [x] 内存池
 - [x] shared_ptr
-- [ ] 数学库（Vector3/Matrix4）
-- [ ] 软渲染器
+- [x] 数学库（Vector3/Matrix4）
+- [x] 软渲染器

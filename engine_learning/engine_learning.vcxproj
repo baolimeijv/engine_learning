@@ -145,13 +145,16 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix4.cpp" />
     <ClCompile Include="memory_pool.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bresenham.md" />
     <None Include="matrix4.md" />
     <None Include="memory_pool.md" />
     <None Include="README.md" />
     <None Include="shared_ptr.md" />
+    <None Include="Triangle.md" />
     <None Include="vector3.md" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +163,7 @@
     <ClInclude Include="matrix4.h" />
     <ClInclude Include="memory_pool.h" />
     <ClInclude Include="shared_ptr.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

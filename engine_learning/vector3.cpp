@@ -70,3 +70,18 @@ std::ostream& operator<<(std::ostream& os, const vector3& v) {
     os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
     return os;
 }
+
+//Triangle有向面积
+float vector3::cross2D(const vector3 &v)const
+{
+    return x * v.y - y * v.x;
+}
+
+float vector3::get_xyz(float a) const
+{
+    if (a == 'x')return x;
+    else if (a == 'y')return y;
+    else if (a == 'z')return z;
+    else std::cout << "请匹配参数" << std::endl;
+}
+

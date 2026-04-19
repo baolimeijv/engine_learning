@@ -4,6 +4,7 @@ Color::Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(
 
 Framebuffer::Framebuffer(int w, int h) : width(w), height(h) {
     pixels.resize(w * h);
+    zbuffer.resize(w*h,std::numeric_limits<float>::infinity());//初始化为无穷大
 }
 
 void Framebuffer::put_pixel(int x, int y, Color c) {
@@ -27,3 +28,31 @@ void Framebuffer::save_ppm(const std::string& filename) const {
         ofs << "\n";
     }
 }
+
+Color Framebuffer::get_pixels(int x, int y)
+{
+    return pixels[y * width + x];
+}
+
+void Framebuffer::clear(Color c)
+{
+    std::fill(pixels.begin(), pixels.end(), c);
+}
+
+void Framebuffer::clearDepth()
+{
+    std::fill(zbuffer.begin(), zbuffer.end(), std::numeric_limits<float>::infinity());
+}
+
+float Framebuffer::get_buffer(int x,int y) const
+{
+    return zbuffer[y*width+x];
+}
+
+void Framebuffer::modify_buffer(int x, int y, float z)
+{
+    zbuffer[y * width + x] = z;
+}
+
+
+
