@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Bresenham.md" />
+    <None Include="flat_shading.md" />
     <None Include="matrix4.md" />
     <None Include="memory_pool.md" />
     <None Include="README.md" />

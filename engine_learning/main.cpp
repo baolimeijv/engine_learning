@@ -156,12 +156,12 @@ void draw_Triangle_test()
 
     Triangle triangle1(
         vector3(100, 100, 0.5f), vector3(700, 400, 0.5f), vector3(100, 700, 0.5f),
-        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255)
+        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),vector3(0,0,1)
     );
 
     Triangle triangle2(
         vector3(0, 100, 0.5f), vector3(800, 400, 0.5f), vector3(100, 800, 0.5f),
-        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255)
+        Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255), vector3(0, 0, 1)
     );
 
     sf::RenderWindow window(sf::VideoMode({ W, H }), "Triangle Test");
@@ -181,22 +181,22 @@ void draw_Triangle_test()
         std::vector<std::vector<vector3>> heartTriangles =
         {
             //左边
-            {{250,100.0} ,{410,250,0},{400,700,0}},
-            {{250,100.0} ,{400,700,0},{50,400,0}},
-            {{250,100.0} ,{50,400,0}, {50,200,0}},
-            {{250,100.0} ,{50,200,0},{130,100,0}},
+            {{250,100,0} ,{410,250,0},{400,700,0}},
+            {{250,100,0} ,{400,700,0},{50,400,0}},
+            {{250,100,0} ,{50,400,0}, {50,200,0}},
+            {{250,100,0} ,{50,200,0},{130,100,0}},
             //对称
-            {{550,100.0} ,{390,250,0},{400,700,0}},
-            {{550,100.0} ,{400,700,0},{750,400,0}},
-            {{550,100.0} ,{750,400,0},{750,200,0}},
-            {{550,100.0} ,{750,200,0},{670,100,0}},
+            {{550,100,0} ,{400,700,0},{390,250,0}},
+            {{550,100,0} ,{750,400,0},{400,700,0}},
+            {{550,100,0} ,{750,200,0},{750,400,0}},
+            {{550,100,0} ,{670,100,0},{750,200,0}},
 
         };
         triangle1.draw_Triangle(fb);
         triangle2.draw_Triangle(fb);
         for (auto& tri : heartTriangles) 
         {
-          Triangle t(tri[0], tri[1], tri[2], Color(255,0,0), Color(255,0,0), Color(255,0,0));
+          Triangle t(tri[0], tri[1], tri[2], Color(255,0,0), Color(255,0,0), Color(255,0,0),vector3(0,0,1));
          t.draw_Triangle(fb);
         }
 
@@ -242,7 +242,8 @@ void rotating_cube_test()
     };
 
     // 每个三角形的颜色
-    Color cubeColors[12] = {
+    Color cubeColors[12] = 
+    {
         Color(255,0,0), Color(255,0,0),   // 前面红色
         Color(0,255,0), Color(0,255,0),   // 后面绿色
         Color(0,0,255), Color(0,0,255),   // 底面蓝色
@@ -264,36 +265,39 @@ void rotating_cube_test()
         fb.clear(Color(0, 0, 0));
         fb.clearDepth();
 
-        matrix4 model = matrix4::rotationZ(angle)*matrix4::rotationX(2*angle)*matrix4::rotationY(angle);
+        matrix4 model = matrix4::rotationX(angle)*matrix4::rotationY(angle);
         matrix4 view = matrix4::translation(0, 0, -5);
         matrix4 proj = matrix4::perspective(3.141592f / 3, (float)w / h, 0.1f, 1000.0f);
-        matrix4 mvp = proj * view * model;
+        matrix4 mv = view * model;
+        matrix4 mvp = proj * mv;
 
         vector3 screenVertex[8];
+        vector3 viewVertex[8];//旋转未透视点直角坐标
 
-        for (int i = 0; i < 8; ++i)
+        for (int i = 0;i < 8;i++)
         {
-            const vector3& v = cubeVertex[i];
-            float cx = mvp.get_m(0, 0) * v.get_xyz('x') + mvp.get_m(0, 1) * v.get_xyz('y') + mvp.get_m(0, 2) * v.get_xyz('z') + mvp.get_m(0, 3);
-            float cy = mvp.get_m(1, 0) * v.get_xyz('x') + mvp.get_m(1, 1) * v.get_xyz('y') + mvp.get_m(1, 2) * v.get_xyz('z') + mvp.get_m(1, 3);
-            float cz = mvp.get_m(2, 0) * v.get_xyz('x') + mvp.get_m(2, 1) * v.get_xyz('y') + mvp.get_m(2, 2) * v.get_xyz('z') + mvp.get_m(2, 3);
-            float cw = mvp.get_m(3, 0) * v.get_xyz('x') + mvp.get_m(3, 1) * v.get_xyz('y') + mvp.get_m(3, 2) * v.get_xyz('z') + mvp.get_m(3, 3);
+            viewVertex[i] = mv.transformPoint(cubeVertex[i]);
+            vector3 temp = mvp.transformPoint(cubeVertex[i]);
+            float cw = mvp.get_m(3, 0) * cubeVertex[i].get_xyz('x') + mvp.get_m(3, 1) * cubeVertex[i].get_xyz('y') +
+                mvp.get_m(3, 2) * cubeVertex[i].get_xyz('z') + mvp.get_m(3, 3);
 
-            float ndc_x = cx / cw;
-            float ndc_y = cy / cw;
-            float ndc_z = cz / cw;
+            float ndc_x = temp.get_xyz('x') / cw;
+            float ndc_y = temp.get_xyz('y') / cw;
+            float ndc_z = temp.get_xyz('z') / cw;
 
-            float depth = (ndc_z + 1.0f) * 0.5f;
-            float screen_x = (ndc_x + 1.0f) * 0.5f * w;
-            float screen_y = (1.0f - ndc_y) * 0.5f * h;
-
-            screenVertex[i].set(screen_x, screen_y, depth); // 使用 setter
+            screenVertex[i].set((ndc_x+1)*0.5f*w,(1-ndc_y)*0.5f*h,(ndc_z+1)*0.5);
         }
-
-        for (int i = 0; i < 12; i++) {
+ 
+        for (int i = 0; i < 12; i++)
+        {
+            //计算每个面法向量
+            vector3 AB = viewVertex[cubeface[i][1]] - viewVertex[cubeface[i][0]];
+            vector3 AC = viewVertex[cubeface[i][2]] - viewVertex[cubeface[i][0]];
+            vector3 n = AC.cross(AB);
+            n=n.normalized();
             Triangle tri(screenVertex[cubeface[i][0]],screenVertex[cubeface[i][1]],screenVertex[cubeface[i][2]]
-                ,cubeColors[i], cubeColors[i], cubeColors[i]);
-            tri.draw_Triangle(fb);
+                ,cubeColors[i], cubeColors[i], cubeColors[i],n);
+            tri.draw_Triangle(fb,proj);
         }
 
         // 显示...
@@ -325,10 +329,10 @@ int main()
     //matrix4测试
     matrix4_test();
     //bresenham画线算法测试
-    //draw_line_test();
+    draw_line_test();
     //重心填充三角形绘制爱心测试
-    //draw_Triangle_test();
+    draw_Triangle_test();
     //旋转立方体测试
     rotating_cube_test();
-
+    
 }

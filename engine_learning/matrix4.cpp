@@ -89,6 +89,11 @@ matrix4 matrix4::orthographic(float left, float right, float bottom, float top, 
 
 matrix4 matrix4::perspective(float fov, float aspect, float near, float far) 
 {
+    /*[n/r,0,0,0]
+    [0,n/t,0,0]
+    [0,0,C,D]
+    [0,0,-1,0]
+    C = -(f + n) / (f - n)D = -2f / (f - n)*/
     matrix4 mat;
     float tanHalfFov = tan(fov / 2.0f);
     mat.m[0][0] = 1.0f / (aspect * tanHalfFov);
@@ -98,6 +103,72 @@ matrix4 matrix4::perspective(float fov, float aspect, float near, float far)
     mat.m[3][2] = -1.0f;
     mat.m[3][3] = 0.0f;
     return mat;
+}
+
+matrix4 matrix4::inverse() const
+{
+    //构建增广矩阵，右边为单位阵
+    float temp[4][8] = {0};
+    for (int i = 0;i < 4;i++)
+    {
+        for (int j = 0;j < 4;j++)
+        {
+            temp[i][j] = m[i][j];
+        }
+        temp[i][i + 4] = 1;
+    }
+    
+    const float EPS = 1e-6f;//精度问题
+
+    //前四列
+    for (int c = 0;c < 4;c++)
+    {
+        int indexc = c;
+        float maxVal = fabs(temp[c][c]);
+        //c+1到4行
+        for (int r = c + 1;r < 4;r++)
+        {
+            //寻找主行
+            if (fabs(temp[r][c]) > maxVal)
+            {
+                maxVal = fabs(temp[r][c]);
+                indexc = r;
+            }
+        }
+
+        if (maxVal < EPS)
+        {
+            std::cout << "矩阵不可逆" << std::endl;
+            return matrix4::identity();
+        }
+
+        //主行放到第一行,顺便归一
+        float firsttemp = temp[indexc][c];
+        for (int i = 0;i < 8;i++)
+        {
+            std::swap(temp[indexc][i], temp[c][i]);
+            temp[c][i] /= firsttemp;
+        }
+
+        //除了当前行外全部减去这一行的倍数归零
+        for (int r = 0; r < 4; ++r) {
+            if (r == c) continue;
+            float factor = temp[r][c];
+            if (fabs(factor) < EPS) continue;
+            for (int i = 0; i < 8; ++i) {
+                temp[r][i] -= factor * temp[c][i];
+            }
+        }
+    }
+    matrix4 mat;
+    for (int i = 0;i < 4;i++)
+    {
+        for (int j = 4;j < 8;j++)
+        {
+            mat.m[i][j - 4] = temp[i][j];
+        }
+    }
+    return mat;   
 }
 
 vector3 matrix4::transformPoint(const vector3& p) const {

@@ -54,5 +54,15 @@ void Framebuffer::modify_buffer(int x, int y, float z)
     zbuffer[y * width + x] = z;
 }
 
+int Framebuffer::get_w() const
+{
+    return width;
+}
+
+int Framebuffer::get_h() const
+{
+    return height;
+}
+
 
 

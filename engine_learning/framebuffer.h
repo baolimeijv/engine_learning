@@ -22,6 +22,8 @@ public:
     void clearDepth();
     float get_buffer(int x,int y)const;
     void modify_buffer(int x, int y, float z);
+    int get_w()const;
+    int get_h()const;
 private:
     int width, height;
     std::vector<Color> pixels;
