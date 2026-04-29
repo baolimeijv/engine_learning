@@ -9,15 +9,22 @@
 - [数学库笔记](./matrix4.md) — 手写 Vector3、Matrix4，支持 MVP 变换、透视投影、矩阵求逆
 - [软渲染器笔记](./soft_renderer.md) — 完整手写软渲染器，包含：
   - Bresenham 画线
-	![bresenham]("bresenham.png")
+
+    ![Bresenham画线](bresenham.png)
+
   - 重心坐标三角形填充 + 深度缓冲
   - 背面剔除
-	![三角形爱心]("zbuffer.png")
+
+    ![三角形爱心](zbuffer.png)
+
   - Blinn-Phong 光照（环境光 + 漫反射 + 高光）
-	![光照]("blinn_phong.png")
+
+    ![光照效果](blinn_phong.png)
+
   - **纹理映射**：Mipmap 金字塔生成、双线性插值、三线性插值、透视校正纹理映射
   - 键盘交互（旋转/缩放）
-	![纹理]("mipmap.png")
+
+    ![纹理映射](mipmap.png)
 
 ## 技术栈
 
