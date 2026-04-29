@@ -1,7 +1,5 @@
 #include "framebuffer.h"
 
-Color::Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
-
 Framebuffer::Framebuffer(int w, int h) : width(w), height(h) {
     pixels.resize(w * h);
     zbuffer.resize(w*h,std::numeric_limits<float>::infinity());//初始化为无穷大

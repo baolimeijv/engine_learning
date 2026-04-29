@@ -9,6 +9,7 @@
 #include "draw_line.h"
 #include"Triangle.h"
 #include<vector>
+#include"Texture2D.h"
 
 int pool_test()
 {
@@ -242,7 +243,7 @@ void rotating_cube_test()
     };
 
     // 每个三角形的颜色
-    Color cubeColors[12] = 
+    Color cubeColors[12] =
     {
         Color(255,0,0), Color(255,0,0),   // 前面红色
         Color(0,255,0), Color(0,255,0),   // 后面绿色
@@ -252,7 +253,17 @@ void rotating_cube_test()
         Color(0,255,255), Color(0,255,255)  // 右面青色
     };
 
-    float angle = 0;
+    float angleX = 0.0f;
+    float angleY = 0.0f;
+    float anglev = 0.1f;
+    float scale=1.0f;
+
+    Texture2D tex = Texture2D::loadTexture("C:/Users/Yang/Pictures/Screenshots/test1.png");
+    bool texopen=1;
+    std::cout << "tex width: " << tex.getWidth() << std::endl;
+    if (tex.getWidth() == 0) {
+        std::cerr << "纹理加载失败" << std::endl;
+    }
 
     while (window.isOpen())
     {
@@ -260,12 +271,17 @@ void rotating_cube_test()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
+            if (auto* scroll = event->getIf<sf::Event::MouseWheelScrolled>())
+            {
+                scale += scroll->delta * 0.1f;
+                scale = std::max(0.1f, scale);
+            }
         }
 
         fb.clear(Color(0, 0, 0));
         fb.clearDepth();
 
-        matrix4 model = matrix4::rotationX(angle)*matrix4::rotationY(angle);
+        matrix4 model = matrix4::rotationX(angleX) * matrix4::rotationY(angleY)*matrix4::scale(scale,scale,scale);
         matrix4 view = matrix4::translation(0, 0, -5);
         matrix4 proj = matrix4::perspective(3.141592f / 3, (float)w / h, 0.1f, 1000.0f);
         matrix4 mv = view * model;
@@ -285,25 +301,61 @@ void rotating_cube_test()
             float ndc_y = temp.get_xyz('y') / cw;
             float ndc_z = temp.get_xyz('z') / cw;
 
-            screenVertex[i].set((ndc_x+1)*0.5f*w,(1-ndc_y)*0.5f*h,(ndc_z+1)*0.5);
-        }
- 
-        for (int i = 0; i < 12; i++)
-        {
-            //计算每个面法向量
-            vector3 AB = viewVertex[cubeface[i][1]] - viewVertex[cubeface[i][0]];
-            vector3 AC = viewVertex[cubeface[i][2]] - viewVertex[cubeface[i][0]];
-            vector3 n = AC.cross(AB);
-            n=n.normalized();
-            Triangle tri(screenVertex[cubeface[i][0]],screenVertex[cubeface[i][1]],screenVertex[cubeface[i][2]]
-                ,cubeColors[i], cubeColors[i], cubeColors[i],n);
-            tri.draw_Triangle(fb,proj);
+            screenVertex[i].set((ndc_x + 1) * 0.5f * w, (1 - ndc_y) * 0.5f * h, (ndc_z + 1) * 0.5);
         }
 
+
+        // 每个面两个三角形，共 12 个三角形
+        // 每个三角形的三个顶点 UV
+        //（0，0）顺时针依次对应7546
+        float faceUV[12][3][2] =
+        {
+            // 前面
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
+            // 后面 (你实测)
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
+            // 底面
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
+            // 顶面
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
+            // 左面
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
+            // 右面
+            {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}}
+        };
+
+        for (int i = 0; i < 12; i++) {
+            // 计算法线
+            vector3 AB = viewVertex[cubeface[i][1]] - viewVertex[cubeface[i][0]];
+            vector3 AC = viewVertex[cubeface[i][2]] - viewVertex[cubeface[i][0]];
+            vector3 n = AC.cross(AB).normalized();
+
+            // 获取当前三角形的 UV
+            float u0 = faceUV[i][0][0], v0 = faceUV[i][0][1];
+            float u1 = faceUV[i][1][0], v1 = faceUV[i][1][1];
+            float u2 = faceUV[i][2][0], v2 = faceUV[i][2][1];
+
+            Triangle tri(
+                screenVertex[cubeface[i][0]], screenVertex[cubeface[i][1]], screenVertex[cubeface[i][2]],
+                cubeColors[i], cubeColors[i], cubeColors[i], n,
+                u0, v0, u1, v1, u2,v2,
+                &tex);
+            bool opentex = true;//纹理开关
+            if(opentex)tri.disableTexture();//纹理关闭
+            tri.draw_Triangle(fb, proj);
+            
+        }
+
+        // 用方向键控制旋转
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))  angleY -= anglev;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) angleY += anglev;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))    angleX -= anglev;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))  angleX += anglev;
+        
         // 显示...
         sf::Image image(sf::Vector2u(w, h));
         for (int y = 0; y < h; ++y)
-            for (int x = 0; x < w; ++x) 
+            for (int x = 0; x < w; ++x)
             {
                 Color c = fb.get_pixels(x, y);
                 image.setPixel(sf::Vector2u(x, y), sf::Color(c.r, c.g, c.b));
@@ -313,11 +365,8 @@ void rotating_cube_test()
         sf::Sprite sprite(texture);
         window.draw(sprite);
         window.display();
-
-        angle += 0.03f;
     }
 }
-
 int main()
 {
     //内存池测试
@@ -332,7 +381,7 @@ int main()
     draw_line_test();
     //重心填充三角形绘制爱心测试
     draw_Triangle_test();
-    //旋转立方体测试
+    //旋转立方体(漫反射高光)测试
     rotating_cube_test();
     
 }

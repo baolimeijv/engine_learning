@@ -2,8 +2,10 @@
 bool lightopen = true;//光照开光
 bool hightlight = true;//高光开关
 Triangle::Triangle(const vector3& v0, const vector3& v1, const vector3& v2,
-	const Color& color0, const Color& color1, const Color& color2,const vector3 &n) :v{ v0,v1,v2 },
-	color{color0,color1,color2},normal(n){};
+	const Color& color0, const Color& color1, const Color& color2, const vector3& n, 
+	float a0, float b0, float a1, float b1, float a2, float b2, Texture2D* tex) 
+	:v{ v0,v1,v2 }, color{ color0,color1,color2 }, normal(n), uv{ {a0,b0},{a1,b1},{a2,b2} }, texture(tex) {
+};
 void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 {
 	float area2 = (v[1].x - v[0].x) * (v[2].y - v[0].y) - (v[2].x - v[0].x) * (v[1].y - v[0].y);
@@ -21,9 +23,9 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 	float det = AB.cross2D(AC);
 	if (det == 0)return;
 
-	for (int i = minX;i <= maxX;i++)
+	for (int i = minX; i <= maxX; i++)
 	{
-		for (int j = minY;j <= maxY;j++)
+		for (int j = minY; j <= maxY; j++)
 		{
 			vector3 AP = vector3(i, j, 0) - v[0];
 			float alpha = AP.cross2D(AC) / det;
@@ -31,11 +33,33 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 			float gamma = 1 - alpha - betal;
 			if (alpha >= 0 && betal >= 0 && gamma >= 0)
 			{
-				//计算该点颜色值
-				float r = alpha * color[0].r + betal * color[1].r + gamma * color[2].r;
-				float g = alpha * color[0].g + betal * color[1].g + gamma * color[2].g;
-				float b = alpha * color[0].b + betal * color[1].b + gamma * color[2].b;
-				Color Pcolor(r, g, b);
+				// 透视矫正插值
+				float z0 = v[0].z, z1 = v[1].z, z2 = v[2].z;
+				float invZ0 = 1.0f / z0, invZ1 = 1.0f / z1, invZ2 = 1.0f / z2;
+
+				float invZ = alpha * invZ0 + betal * invZ1 + gamma * invZ2;
+				float u_over_z = alpha * uv[0][0] * invZ0 + betal * uv[1][0] * invZ1 + gamma * uv[2][0] * invZ2;
+				float v_over_z = alpha * uv[0][1] * invZ0 + betal * uv[1][1] * invZ1 + gamma * uv[2][1] * invZ2;
+
+				float UV_u = u_over_z / invZ;
+				float UV_v = v_over_z / invZ;
+
+				// 保证UV在[0,1]范围
+				UV_u = std::clamp(UV_u, 0.0f, 1.0f);
+				UV_v = std::clamp(UV_v, 0.0f, 1.0f);
+
+				Color texColor;
+				if (texture)
+				{
+					texColor = texture->sampleTrilinear(UV_u, UV_v, 0.0f);
+				}
+				else
+				{
+					float r = alpha * color[0].r + betal * color[1].r + gamma * color[2].r;
+					float g = alpha * color[0].g + betal * color[1].g + gamma * color[2].g;
+					float b = alpha * color[0].b + betal * color[1].b + gamma * color[2].b;
+					texColor = Color(r, g, b);
+				}
 				//默认为0
 				float intensity = 0.0f;
 				//将点（1，1，1）单位化成向量表示相机指向光源
@@ -76,16 +100,13 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 					//计算高光,负数的小数次幂无意义
 					float tempDot = normal.dot(halfv);
 					float Hlight=0;
-					if (tempDot > 0)Hlight = powf(tempDot, 8);
+					if (tempDot > 0)Hlight = powf(tempDot, 4);
 					//添加高光
 					intensity += Hlight;
 					if (intensity > 1)intensity = 1;
 				}
 				//加入光照修改颜色分度
-				r = Pcolor.r * intensity;
-				g = Pcolor.g * intensity;
-				b = Pcolor.b * intensity;
-				Color finalColor(r, g, b);
+				Color finalColor=texColor* intensity;
 				if (z < fb.get_buffer(i, j))
 				{
 					fb.modify_buffer(i, j, z);

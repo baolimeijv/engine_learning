@@ -140,11 +140,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="draw_line.cpp" />
     <ClCompile Include="framebuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix4.cpp" />
     <ClCompile Include="memory_pool.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="vector3.cpp" />
   </ItemGroup>
@@ -159,11 +161,13 @@
     <None Include="vector3.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Color.h" />
     <ClInclude Include="framebuffer.h" />
     <ClInclude Include="draw_line.h" />
     <ClInclude Include="matrix4.h" />
     <ClInclude Include="memory_pool.h" />
     <ClInclude Include="shared_ptr.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="vector3.h" />
   </ItemGroup>

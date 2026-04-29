@@ -39,6 +39,12 @@
     <ClCompile Include="framebuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="matrix4.md">
@@ -86,6 +92,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="framebuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
