@@ -341,7 +341,7 @@ void rotating_cube_test()
                 u0, v0, u1, v1, u2,v2,
                 &tex);
             bool opentex = true;//纹理开关
-            if(opentex)tri.disableTexture();//纹理关闭
+            if(!opentex)tri.disableTexture();//纹理关闭
             tri.draw_Triangle(fb, proj);
             
         }
@@ -354,8 +354,8 @@ void rotating_cube_test()
         
         // 显示...
         sf::Image image(sf::Vector2u(w, h));
-        for (int y = 0; y < h; ++y)
-            for (int x = 0; x < w; ++x)
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
             {
                 Color c = fb.get_pixels(x, y);
                 image.setPixel(sf::Vector2u(x, y), sf::Color(c.r, c.g, c.b));
