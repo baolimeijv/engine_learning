@@ -224,7 +224,7 @@ void rotating_cube_test()
     const int w = 800, h = 800;
     Framebuffer fb(w, h);
     sf::RenderWindow window(sf::VideoMode({ w, h }), "Rotating Cube");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
 
     // 顶点（局部坐标）
     vector3 cubeVertex[8] = {
@@ -255,10 +255,10 @@ void rotating_cube_test()
 
     float angleX = 0.0f;
     float angleY = 0.0f;
-    float anglev = 0.1f;
+    float anglev = 0.06f;
     float scale=1.0f;
 
-    Texture2D tex = Texture2D::loadTexture("C:/Users/Yang/Pictures/Screenshots/test1.png");
+    Texture2D tex = Texture2D::loadTexture("C:/Users/Yang/Pictures/Screenshots/test.png");
     bool texopen=1;
     std::cout << "tex width: " << tex.getWidth() << std::endl;
     if (tex.getWidth() == 0) {
