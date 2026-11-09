@@ -1,4 +1,5 @@
 ﻿#include "Triangle.h"
+#include <cmath>
 bool lightopen = true;//光照开光
 bool hightlight = true;//高光开关
 Triangle::Triangle(const vector3& v0, const vector3& v1, const vector3& v2,
@@ -22,6 +23,38 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 	//计算权重
 	float det = AB.cross2D(AC);
 	if (det == 0)return;
+
+	// ---- compute mipmap LOD (approximated as constant per triangle) ----
+	float lod = 0.0f;
+	if (texture)
+	{
+		float invZ0 = 1.0f / v[0].z, invZ1 = 1.0f / v[1].z, invZ2 = 1.0f / v[2].z;
+		// perspective-correct UV at a given screen point
+		auto uvAt = [&](float px, float py, float& ou, float& ov)
+		{
+			vector3 AP2 = vector3(px, py, 0) - v[0];
+			float a = AP2.cross2D(AC) / det;
+			float b = AB.cross2D(AP2) / det;
+			float g = 1.0f - a - b;
+			float iz = a * invZ0 + b * invZ1 + g * invZ2;
+			float uo = a * uv[0][0] * invZ0 + b * uv[1][0] * invZ1 + g * uv[2][0] * invZ2;
+			float vo = a * uv[0][1] * invZ0 + b * uv[1][1] * invZ1 + g * uv[2][1] * invZ2;
+			ou = uo / iz;
+			ov = vo / iz;
+		};
+		// finite difference from the centroid: how far UV moves per 1 screen pixel
+		float cx = (v[0].x + v[1].x + v[2].x) / 3.0f;
+		float cy = (v[0].y + v[1].y + v[2].y) / 3.0f;
+		float cu0, cv0, cux, cvx, cuy, cvy;
+		uvAt(cx, cy, cu0, cv0);
+		uvAt(cx + 1.0f, cy, cux, cvx);
+		uvAt(cx, cy + 1.0f, cuy, cvy);
+		float tw = texture->getWidth(), th = texture->getHight();
+		float rho = std::max(
+			std::max(fabsf(cux - cu0) * tw, fabsf(cvx - cv0) * th),
+			std::max(fabsf(cuy - cu0) * tw, fabsf(cvy - cv0) * th));
+		lod = (rho > 1.0f) ? log2f(rho) : 0.0f;
+	}
 
 	for (int i = minX; i <= maxX; i++)
 	{
@@ -51,7 +84,7 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 				Color texColor;
 				if (texture)
 				{
-					texColor = texture->sampleTrilinear(UV_u, UV_v, 0.0f);
+					texColor = texture->sampleTrilinear(UV_u, UV_v, lod);
 				}
 				else
 				{
