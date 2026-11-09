@@ -24,12 +24,10 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 	float det = AB.cross2D(AC);
 	if (det == 0)return;
 
-	// ---- compute mipmap LOD (approximated as constant per triangle) ----
 	float lod = 0.0f;
 	if (texture)
 	{
 		float invZ0 = 1.0f / v[0].z, invZ1 = 1.0f / v[1].z, invZ2 = 1.0f / v[2].z;
-		// perspective-correct UV at a given screen point
 		auto uvAt = [&](float px, float py, float& ou, float& ov)
 		{
 			vector3 AP2 = vector3(px, py, 0) - v[0];
@@ -42,7 +40,6 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 			ou = uo / iz;
 			ov = vo / iz;
 		};
-		// finite difference from the centroid: how far UV moves per 1 screen pixel
 		float cx = (v[0].x + v[1].x + v[2].x) / 3.0f;
 		float cy = (v[0].y + v[1].y + v[2].y) / 3.0f;
 		float cu0, cv0, cux, cvx, cuy, cvy;

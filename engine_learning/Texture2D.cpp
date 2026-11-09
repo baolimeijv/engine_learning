@@ -28,7 +28,11 @@ Texture2D::Texture2D(int w, int h, std::vector<Color> data) : Bwidth(w), Bhight(
 				Color c10 = (*src)[y1 * curW + x0];
 				Color c11 = (*src)[y1 * curW + x1];
 
-				next[y * nextW + x] = (c00 + c01 + c10 + c11) / 4;
+				Color avg(
+					(unsigned char)((c00.r + c01.r + c10.r + c11.r) / 4),
+					(unsigned char)((c00.g + c01.g + c10.g + c11.g) / 4),
+					(unsigned char)((c00.b + c01.b + c10.b + c11.b) / 4));
+				next[y * nextW + x] = avg;
 			}
 		}
 
