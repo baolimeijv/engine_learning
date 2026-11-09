@@ -1,29 +1,29 @@
-#include "vector3.h"
+ï»¿#include "vector3.h"
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 vector3::vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-// ¼Ó·¨
+// åŠ æ³•
 vector3 vector3::operator+(const vector3& v) const {
     return vector3(x + v.x, y + v.y, z + v.z);
 }
 
-// ¼õ·¨
+// å‡æ³•
 vector3 vector3::operator-(const vector3& v) const {
     return vector3(x - v.x, y - v.y, z - v.z);
 }
 
-// Êı³Ë£¨ÏòÁ¿ * ±êÁ¿£©
+// æ•°ä¹˜ï¼ˆå‘é‡ * æ ‡é‡ï¼‰
 vector3 vector3::operator*(float a) const {
     return vector3(a * x, a * y, a * z);
 }
 
-// Êı³ı£¨ÏòÁ¿ / ±êÁ¿£©
+// æ•°é™¤ï¼ˆå‘é‡ / æ ‡é‡ï¼‰
 vector3 vector3::operator/(float a) const {
     return vector3(x / a, y / a, z / a);
 }
 
-// ¸´ºÏ¼Ó·¨
+// å¤åˆåŠ æ³•
 vector3& vector3::operator+=(const vector3& v) {
     x += v.x;
     y += v.y;
@@ -31,7 +31,7 @@ vector3& vector3::operator+=(const vector3& v) {
     return *this;
 }
 
-// ¸´ºÏ¼õ·¨
+// å¤åˆå‡æ³•
 vector3& vector3::operator-=(const vector3& v) {
     x -= v.x;
     y -= v.y;
@@ -39,12 +39,12 @@ vector3& vector3::operator-=(const vector3& v) {
     return *this;
 }
 
-// µã»ı
+// ç‚¹ç§¯
 float vector3::dot(const vector3& v) const {
     return x * v.x + y * v.y + z * v.z;
 }
 
-// ²æ»ı
+// å‰ç§¯
 vector3 vector3::cross(const vector3& v) const {
     return vector3(
         y * v.z - z * v.y,
@@ -53,25 +53,25 @@ vector3 vector3::cross(const vector3& v) const {
     );
 }
 
-// Ä£³¤
+// æ¨¡é•¿
 float vector3::length() const {
     return std::sqrt(x * x + y * y + z * z);
 }
 
-// µ¥Î»»¯
+// å•ä½åŒ–
 vector3 vector3::normalized() const {
     float len = length();
     if (len == 0) return *this;
     return *this / len;
 }
 
-// Êä³öÁ÷
+// è¾“å‡ºæµ
 std::ostream& operator<<(std::ostream& os, const vector3& v) {
     os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
     return os;
 }
 
-//TriangleÓĞÏòÃæ»ı
+//Triangleæœ‰å‘é¢ç§¯
 float vector3::cross2D(const vector3 &v)const
 {
     return x * v.y - y * v.x;
@@ -82,6 +82,6 @@ float vector3::get_xyz(float a) const
     if (a == 'x')return x;
     else if (a == 'y')return y;
     else if (a == 'z')return z;
-    else std::cout << "ÇëÆ¥Åä²ÎÊı" << std::endl;
+    else std::cout << "è¯·åŒ¹é…å‚æ•°" << std::endl;
 }
 

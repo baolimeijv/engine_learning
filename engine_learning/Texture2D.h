@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include"framebuffer.h"
 #include<SFML/Graphics.hpp>
 #include<string>
 class Texture2D
 {
 private:
-	std::vector<std::vector<Color>>mipmaps;//Ã¿ÕÅÎÆÀíÍ¼Æ¬
+	std::vector<std::vector<Color>>mipmaps;//æ¯å¼ çº¹ç†å›¾ç‰‡
 	std::vector<std::pair<int, int>> mipSizes;
 	int Bwidth, Bhight;
 public:

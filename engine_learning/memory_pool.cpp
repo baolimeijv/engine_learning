@@ -1,4 +1,4 @@
-#include "memory_pool.h"
+ï»¿#include "memory_pool.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -32,7 +32,7 @@ void* poolmalloc(pool* p)
 {
     if (p->frist == NULL)
     {
-        std::cout << "ÄÚ´æ·ÖÅäÊ§°Ü" << std::endl;
+        std::cout << "å†…å­˜åˆ†é…å¤±è´¥" << std::endl;
         return NULL;
     }
     void* temp = p->frist;

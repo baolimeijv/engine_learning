@@ -1,8 +1,8 @@
-#include "framebuffer.h"
+ï»¿#include "framebuffer.h"
 
 Framebuffer::Framebuffer(int w, int h) : width(w), height(h) {
     pixels.resize(w * h);
-    zbuffer.resize(w*h,std::numeric_limits<float>::infinity());//³õÊ¼»¯ÎªÎŞÇî´ó
+    zbuffer.resize(w*h,std::numeric_limits<float>::infinity());//åˆå§‹åŒ–ä¸ºæ— ç©·å¤§
 }
 
 void Framebuffer::put_pixel(int x, int y, Color c) {
@@ -14,10 +14,10 @@ void Framebuffer::put_pixel(int x, int y, Color c) {
 void Framebuffer::save_ppm(const std::string& filename) const {
     std::ofstream ofs(filename);
     if (!ofs) {
-        std::cerr << "ÎŞ·¨´ò¿ªÎÄ¼ş " << filename << std::endl;
+        std::cerr << "æ— æ³•æ‰“å¼€æ–‡ä»¶ " << filename << std::endl;
         return;
     }
-    ofs << "P3\n" << width << " " << height << "\n255\n";//p3 ASCll p6 ¶ş½øÖÆ
+    ofs << "P3\n" << width << " " << height << "\n255\n";//p3 ASCll p6 äºŒè¿›åˆ¶
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Color c = pixels[y * width + x];

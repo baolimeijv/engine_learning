@@ -1,4 +1,4 @@
-#include "matrix4.h"
+ï»¿#include "matrix4.h"
 #include <cmath>
 
 matrix4::matrix4() {
@@ -107,7 +107,7 @@ matrix4 matrix4::perspective(float fov, float aspect, float near, float far)
 
 matrix4 matrix4::inverse() const
 {
-    //¹¹½¨Ôö¹ã¾ØÕó£¬ÓÒ±ßÎªµ¥Î»Õó
+    //æ„å»ºå¢å¹¿çŸ©é˜µï¼Œå³è¾¹ä¸ºå•ä½é˜µ
     float temp[4][8] = {0};
     for (int i = 0;i < 4;i++)
     {
@@ -118,17 +118,17 @@ matrix4 matrix4::inverse() const
         temp[i][i + 4] = 1;
     }
     
-    const float EPS = 1e-6f;//¾«¶ÈÎÊÌâ
+    const float EPS = 1e-6f;//ç²¾åº¦é—®é¢˜
 
-    //Ç°ËÄÁĞ
+    //å‰å››åˆ—
     for (int c = 0;c < 4;c++)
     {
         int indexc = c;
         float maxVal = fabs(temp[c][c]);
-        //c+1µ½4ĞĞ
+        //c+1åˆ°4è¡Œ
         for (int r = c + 1;r < 4;r++)
         {
-            //Ñ°ÕÒÖ÷ĞĞ
+            //å¯»æ‰¾ä¸»è¡Œ
             if (fabs(temp[r][c]) > maxVal)
             {
                 maxVal = fabs(temp[r][c]);
@@ -138,11 +138,11 @@ matrix4 matrix4::inverse() const
 
         if (maxVal < EPS)
         {
-            std::cout << "¾ØÕó²»¿ÉÄæ" << std::endl;
+            std::cout << "çŸ©é˜µä¸å¯é€†" << std::endl;
             return matrix4::identity();
         }
 
-        //Ö÷ĞĞ·Åµ½µÚÒ»ĞĞ,Ë³±ã¹éÒ»
+        //ä¸»è¡Œæ”¾åˆ°ç¬¬ä¸€è¡Œ,é¡ºä¾¿å½’ä¸€
         float firsttemp = temp[indexc][c];
         for (int i = 0;i < 8;i++)
         {
@@ -150,7 +150,7 @@ matrix4 matrix4::inverse() const
             temp[c][i] /= firsttemp;
         }
 
-        //³ıÁËµ±Ç°ĞĞÍâÈ«²¿¼õÈ¥ÕâÒ»ĞĞµÄ±¶Êı¹éÁã
+        //é™¤äº†å½“å‰è¡Œå¤–å…¨éƒ¨å‡å»è¿™ä¸€è¡Œçš„å€æ•°å½’é›¶
         for (int r = 0; r < 4; ++r) {
             if (r == c) continue;
             float factor = temp[r][c];
@@ -184,7 +184,7 @@ vector3 matrix4::transformVector(const vector3& v) const {
     float z = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z;
     return vector3(x, y, z);
 }
-//¼ÆËãĞĞÁĞÊ½
+//è®¡ç®—è¡Œåˆ—å¼
 float matrix4:: det() const
 {
     return m[0][0] * m[1][1] * m[2][2] + m[0][2] * m[1][0] * m[2][1] + m[2][0] * m[0][1] * m[1][2]

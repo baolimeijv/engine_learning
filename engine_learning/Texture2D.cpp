@@ -1,18 +1,18 @@
-#include"Texture2D.h"
+ï»¿#include"Texture2D.h"
 
 Texture2D::Texture2D(int w, int h, std::vector<Color> data) : Bwidth(w), Bhight(h) {
 	mipmaps.clear();
 	mipSizes.clear();
-	mipSizes.push_back({ w, h });   // Ô­Í¼³ß´ç
-	mipmaps.push_back(data); // µÚ 0 ²ã
+	mipSizes.push_back({ w, h });   // åŸå›¾å°ºå¯¸
+	mipmaps.push_back(data); // ç¬¬ 0 å±‚
 
 	int curW = w, curH = h;
-	const std::vector<Color>* src = &mipmaps[0];   // Ö¸ÏòÉÏÒ»²ã
+	const std::vector<Color>* src = &mipmaps[0];   // æŒ‡å‘ä¸Šä¸€å±‚
 
 	while (curW > 1 || curH > 1) {
 		int nextW = std::max(1, (curW+1) / 2);
 		int nextH = std::max(1, (curH+1) / 2);
-		std::vector<Color> next(nextW * nextH);    // ĞÂ½¨ÈİÆ÷£¬²»×·¼Ó
+		std::vector<Color> next(nextW * nextH);    // æ–°å»ºå®¹å™¨ï¼Œä¸è¿½åŠ 
 
 		for (int y = 0; y < nextH; y++) 
 		{
@@ -34,7 +34,7 @@ Texture2D::Texture2D(int w, int h, std::vector<Color> data) : Bwidth(w), Bhight(
 
 		mipmaps.push_back(next);
 		mipSizes.push_back({ nextW, nextH });
-		src = &mipmaps.back();   // ÏÂÒ»ÂÖÒÔÉÏÒ»²ãÎªÔ´
+		src = &mipmaps.back();   // ä¸‹ä¸€è½®ä»¥ä¸Šä¸€å±‚ä¸ºæº
 		curW = nextW;
 		curH = nextH;
 	}
@@ -77,7 +77,7 @@ Color Texture2D::sampleTrilinear(float u, float v, float lod)
 	if (L0 == L1) return c0;
 	Color c1 = samplebilinear(u, v, L1);
 
-	// ²ã¼äÏßĞÔ»ìºÏ
+	// å±‚é—´çº¿æ€§æ··åˆ
 	return Color(
 		(unsigned char)(c0.r + (c1.r - c0.r) * t),
 		(unsigned char)(c0.g + (c1.g - c0.g) * t),
@@ -114,7 +114,7 @@ Color Texture2D::samplebilinear(float u, float v, int level)  {
 	Color c01 = mip[y1 * w + x0];
 	Color c11 = mip[y1 * w + x1];
 
-	// Ë«ÏßĞÔ²åÖµ
+	// åŒçº¿æ€§æ’å€¼
 	auto lerp = [](const Color& a, const Color& b, float t) -> Color {
 		return Color(
 			(unsigned char)(a.r + (b.r - a.r) * t),

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <string>
 #include <fstream>
@@ -23,5 +23,5 @@ public:
 private:
     int width, height;
     std::vector<Color> pixels;
-    std::vector<float> zbuffer;//Éî¶È»º³å
+    std::vector<float> zbuffer;//æ·±åº¦ç¼“å†²
 };

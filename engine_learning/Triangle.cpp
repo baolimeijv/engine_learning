@@ -1,6 +1,6 @@
-#include "Triangle.h"
-bool lightopen = true;//¹âÕÕ¿ª¹â
-bool hightlight = true;//¸ß¹â¿ª¹Ø
+ï»¿#include "Triangle.h"
+bool lightopen = true;//å…‰ç…§å¼€å…‰
+bool hightlight = true;//é«˜å…‰å¼€å…³
 Triangle::Triangle(const vector3& v0, const vector3& v1, const vector3& v2,
 	const Color& color0, const Color& color1, const Color& color2, const vector3& n, 
 	float a0, float b0, float a1, float b1, float a2, float b2, Texture2D* tex) 
@@ -9,17 +9,17 @@ Triangle::Triangle(const vector3& v0, const vector3& v1, const vector3& v2,
 void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 {
 	float area2 = (v[1].x - v[0].x) * (v[2].y - v[0].y) - (v[2].x - v[0].x) * (v[1].y - v[0].y);
-	if (area2 <= 0) return; // ÌÞ³ýË³Ê±Õë»ò¹²Ïß
-	//°üÎ§¿Ç´¦Àí±ß½ç
+	if (area2 <= 0) return; // å‰”é™¤é¡ºæ—¶é’ˆæˆ–å…±çº¿
+	//åŒ…å›´å£³å¤„ç†è¾¹ç•Œ
 	int minX = std::max((int)std::min(std::min(v[0].x, v[1].x), v[2].x), 0);
 	int maxX = std::min((int)std::max(std::max(v[0].x, v[1].x), v[2].x), fb.width - 1);
 	int minY = std::max((int)std::min(std::min(v[0].y, v[1].y), v[2].y), 0);
 	int maxY = std::min((int)std::max(std::max(v[0].y, v[1].y), v[2].y), fb.height - 1);
 
-	//µã×ªÏòÁ¿
+	//ç‚¹è½¬å‘é‡
 	vector3 AB = v[1] - v[0];
 	vector3 AC = v[2] - v[0];
-	//¼ÆËãÈ¨ÖØ
+	//è®¡ç®—æƒé‡
 	float det = AB.cross2D(AC);
 	if (det == 0)return;
 
@@ -33,7 +33,7 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 			float gamma = 1 - alpha - betal;
 			if (alpha >= 0 && betal >= 0 && gamma >= 0)
 			{
-				// Í¸ÊÓ½ÃÕý²åÖµ
+				// é€è§†çŸ«æ­£æ’å€¼
 				float z0 = v[0].z, z1 = v[1].z, z2 = v[2].z;
 				float invZ0 = 1.0f / z0, invZ1 = 1.0f / z1, invZ2 = 1.0f / z2;
 
@@ -44,7 +44,7 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 				float UV_u = u_over_z / invZ;
 				float UV_v = v_over_z / invZ;
 
-				// ±£Ö¤UVÔÚ[0,1]·¶Î§
+				// ä¿è¯UVåœ¨[0,1]èŒƒå›´
 				UV_u = std::clamp(UV_u, 0.0f, 1.0f);
 				UV_v = std::clamp(UV_v, 0.0f, 1.0f);
 
@@ -60,31 +60,31 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 					float b = alpha * color[0].b + betal * color[1].b + gamma * color[2].b;
 					texColor = Color(r, g, b);
 				}
-				//Ä¬ÈÏÎª0
+				//é»˜è®¤ä¸º0
 				float intensity = 0.0f;
-				//½«µã£¨1£¬1£¬1£©µ¥Î»»¯³ÉÏòÁ¿±íÊ¾Ïà»úÖ¸Ïò¹âÔ´
+				//å°†ç‚¹ï¼ˆ1ï¼Œ1ï¼Œ1ï¼‰å•ä½åŒ–æˆå‘é‡è¡¨ç¤ºç›¸æœºæŒ‡å‘å…‰æº
 				vector3 lightDir = vector3(1, 1, 1).normalized();
-				//»·¾³¹âÇ¿
+				//çŽ¯å¢ƒå…‰å¼º
 				float ambient = 0.2f;
 				intensity += ambient;
 				if (intensity > 1.0f)intensity = 1.0f;
 				if (lightopen)
 				{
-					//Âþ·´Éä
-					float diff = std::max(0.0f, normal.dot(lightDir));//Èç¹û±»ÕÚµ²¼ÆËãÖµ²»Îª0£¬ËùÒÔÓë0±È½Ï
-					intensity += diff;//×ÜÇ¿¶È
-					if (intensity > 1.0f)intensity = 1.0f;//·ÀÖ¹ÁÁ¶È³¬¹ý¹âÔ´²»ºÏÀí
+					//æ¼«åå°„
+					float diff = std::max(0.0f, normal.dot(lightDir));//å¦‚æžœè¢«é®æŒ¡è®¡ç®—å€¼ä¸ä¸º0ï¼Œæ‰€ä»¥ä¸Ž0æ¯”è¾ƒ
+					intensity += diff;//æ€»å¼ºåº¦
+					if (intensity > 1.0f)intensity = 1.0f;//é˜²æ­¢äº®åº¦è¶…è¿‡å…‰æºä¸åˆç†
 				}
 				float z = alpha * v[0].z + betal * v[1].z + gamma * v[2].z;
-				//Ìí¼Ó¸ß¹â
+				//æ·»åŠ é«˜å…‰
 				if (hightlight)
 				{
-					//»ñÈ¡Í¸ÊÓ¾ØÕó¹Ø¼üÔªËØ
+					//èŽ·å–é€è§†çŸ©é˜µå…³é”®å…ƒç´ 
 					float m00=pers.get_m(0, 0);
 					float m11 = pers.get_m(1, 1);
 					float m22 = pers.get_m(2, 2);
 					float m23 = pers.get_m(2, 3);
-					//»¹Ô­ÏñËØÔ­×ø±êÏµ×ø±ê ÆÁÄ»--->ndc--->Ô­×ø±ê
+					//è¿˜åŽŸåƒç´ åŽŸåæ ‡ç³»åæ ‡ å±å¹•--->ndc--->åŽŸåæ ‡
 					float z_ndc = 2.0f * z - 1.0f;
 					float x_ndc = 2.0f * i / fb.get_w() - 1.0f;
 					float y_ndc = 1.0f - 2.0f * j / fb.get_h();
@@ -92,20 +92,20 @@ void Triangle::draw_Triangle(Framebuffer& fb, matrix4 pers)
 					float ze = -m23 / (z_ndc + m22);
 					float xe = -x_ndc * ze / m00;
 					float ye = -y_ndc * ze / m11;
-					//ÏñËØµ½Ïà»úµ¥Î»ÏòÁ¿
+					//åƒç´ åˆ°ç›¸æœºå•ä½å‘é‡
 					vector3 p(xe, ye, ze);
 					p=(vector3(0,0,0)-p).normalized();
-					//°ë½Çµ¥Î»ÏòÁ¿
+					//åŠè§’å•ä½å‘é‡
 					vector3 halfv = (p + lightDir).normalized();
-					//¼ÆËã¸ß¹â,¸ºÊýµÄÐ¡Êý´ÎÃÝÎÞÒâÒå
+					//è®¡ç®—é«˜å…‰,è´Ÿæ•°çš„å°æ•°æ¬¡å¹‚æ— æ„ä¹‰
 					float tempDot = normal.dot(halfv);
 					float Hlight=0;
 					if (tempDot > 0)Hlight = powf(tempDot, 4);
-					//Ìí¼Ó¸ß¹â
+					//æ·»åŠ é«˜å…‰
 					intensity += Hlight;
 					if (intensity > 1)intensity = 1;
 				}
-				//¼ÓÈë¹âÕÕÐÞ¸ÄÑÕÉ«·Ö¶È
+				//åŠ å…¥å…‰ç…§ä¿®æ”¹é¢œè‰²åˆ†åº¦
 				Color finalColor=texColor* intensity;
 				if (z < fb.get_buffer(i, j))
 				{

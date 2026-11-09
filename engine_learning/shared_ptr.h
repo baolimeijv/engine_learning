@@ -1,11 +1,11 @@
-#include <iostream>
+ï»¿#include <iostream>
 
 struct test
 {
     int data;
     test(int x) : data(x)
     {
-        std::cout << "testÓĞ²Î¹¹Ôì" << std::endl;
+        std::cout << "testæœ‰å‚æ„é€ " << std::endl;
     };
     void hellow()
     {
@@ -22,9 +22,9 @@ public:
         if (p != nullptr)
         {
             count = new size_t(1);
-            std::cout << "sharedptrÓĞ²Î¹¹Ôì" << std::endl;
+            std::cout << "sharedptræœ‰å‚æ„é€ " << std::endl;
         }
-        else std::cout << "sharedptrÄ¬ÈÏ¹¹Ôì" << std::endl;
+        else std::cout << "sharedptré»˜è®¤æ„é€ " << std::endl;
     };
 
     sharedptr(const sharedptr& other) : ptr(other.ptr), count(other.count)
@@ -32,7 +32,7 @@ public:
         if (count)
         {
             (*count)++;
-            std::cout << "sharedptr¿½±´¹¹Ôì  count=" << *count << std::endl;
+            std::cout << "sharedptræ‹·è´æ„é€   count=" << *count << std::endl;
         }
     };
 
@@ -45,9 +45,9 @@ public:
         if (count)
         {
             (*count)++;
-            std::cout << "¸³Öµ£¬¼ÆÊı = " << *count << std::endl;
+            std::cout << "èµ‹å€¼ï¼Œè®¡æ•° = " << *count << std::endl;
         }
-        else std::cout << "¸³ÖµÎª¿Õ" << std::endl;
+        else std::cout << "èµ‹å€¼ä¸ºç©º" << std::endl;
         return *this;
     }
 
@@ -79,14 +79,14 @@ private:
         if (count)
         {
             (*count)--;
-            std::cout << "ÊÍ·Åµ±Ç°¼ÆÊı" << std::endl;
+            std::cout << "é‡Šæ”¾å½“å‰è®¡æ•°" << std::endl;
             if (*count == 0)
             {
                 delete ptr;
                 delete count;
                 ptr = nullptr;
                 count = nullptr;
-                std::cout << "×ÊÔ´ÒÑÊÍ·Å" << std::endl;
+                std::cout << "èµ„æºå·²é‡Šæ”¾" << std::endl;
             }
         }
     }

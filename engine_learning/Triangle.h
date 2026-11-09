@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include"vector3.h"
 #include"framebuffer.h"
@@ -9,7 +9,7 @@ class Triangle
 private:
 	vector3 v[3];
 	Color color[3];
-	vector3 normal;//·¨Ïß
+	vector3 normal;//æ³•çº¿
 	float uv[3][2];
 	Texture2D* texture;
 public:

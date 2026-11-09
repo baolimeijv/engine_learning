@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <cmath>
 
@@ -9,10 +9,10 @@ private:
 public:
     friend class matrix4;  
     friend class Triangle;
-    // ¹¹Ôìº¯Êı
+    // æ„é€ å‡½æ•°
     vector3(float x = 0, float y = 0, float z = 0);
 
-    // ¼Ó¼õ³Ë³ı
+    // åŠ å‡ä¹˜é™¤
     vector3 operator+(const vector3& v) const;
     vector3 operator-(const vector3& v) const;
     vector3 operator*(float a) const;
@@ -20,18 +20,18 @@ public:
     vector3& operator+=(const vector3& v);
     vector3& operator-=(const vector3& v);
 
-    // µã»ı¡¢²æ»ı
+    // ç‚¹ç§¯ã€å‰ç§¯
     float dot(const vector3& v) const;
     vector3 cross(const vector3& v) const;
 
-    // Ä£³¤¡¢µ¥Î»»¯
+    // æ¨¡é•¿ã€å•ä½åŒ–
     float length() const;
     vector3 normalized() const;
 
-    // Êä³öÁ÷ÓÑÔª
+    // è¾“å‡ºæµå‹å…ƒ
     friend std::ostream& operator<<(std::ostream& os, const vector3& v);
 
-    //Ìí¼Ó²æ»ıËãÓĞÏòÃæ»ı·½±ã¼ÆËãTriangleµÄÈ¨ÖØ
+    //æ·»åŠ å‰ç§¯ç®—æœ‰å‘é¢ç§¯æ–¹ä¾¿è®¡ç®—Triangleçš„æƒé‡
     float cross2D(const vector3& v1)const;
 
     float get_xyz(float a)const;

@@ -1,8 +1,8 @@
-#include "draw_line.h"
+ï»¿#include "draw_line.h"
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-// Ô­ÓĞµÄ Framebuffer °æ±¾£¨±£Áô£©
+// åŸæœ‰çš„ Framebuffer ç‰ˆæœ¬ï¼ˆä¿ç•™ï¼‰
 void draw_line(Framebuffer& fb, int x0, int y0, int x1, int y1, Color color) {
     int dx = abs(x1 - x0);
     int dy = abs(y1 - y0);
@@ -25,7 +25,7 @@ void draw_line(Framebuffer& fb, int x0, int y0, int x1, int y1, Color color) {
     }
 }
 
-// ĞÂÔö£ºSFML ´°¿Ú°æ±¾µÄ»­Ïßº¯Êı
+// æ–°å¢ï¼šSFML çª—å£ç‰ˆæœ¬çš„ç”»çº¿å‡½æ•°
 void draw_line(sf::RenderWindow& window, int x0, int y0, int x1, int y1, sf::Color color) 
 {
     sf::VertexArray line(sf::PrimitiveType::Lines, 2);

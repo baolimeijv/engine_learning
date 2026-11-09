@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include "vector3.h"
@@ -16,7 +16,7 @@ int pool_test()
     pool p;
     if (poolinit(&p, 100, 32) == -1)
     {
-        std::cout << "ÄÚ´æ³õÊ¼»¯Ê§°Ü" << std::endl;
+        std::cout << "å†…å­˜åˆå§‹åŒ–å¤±è´¥" << std::endl;
         return -1;
     }
     void* p1 = poolmalloc(&p);
@@ -67,27 +67,27 @@ void vector3_test()
     std::cout << "c = a; c -= b; c = " << c << std::endl;
 
     float dot_val = a.dot(b);
-    std::cout << "a¡¤b = " << dot_val << std::endl;
+    std::cout << "aÂ·b = " << dot_val << std::endl;
     vector3 cross_val = a.cross(b);
-    std::cout << "a ¡Á b = " << cross_val << std::endl;
+    std::cout << "a Ã— b = " << cross_val << std::endl;
 
     std::cout << "|a| = " << a.length() << std::endl;
     std::cout << "|b| = " << b.length() << std::endl;
 
     vector3 a_norm = a.normalized();
     vector3 b_norm = b.normalized();
-    std::cout << "a µ¥Î»»¯ = " << a_norm << std::endl;
-    std::cout << "b µ¥Î»»¯ = " << b_norm << std::endl;
-    std::cout << "µ¥Î»»¯ºó³¤¶È: " << a_norm.length() << ", " << b_norm.length() << std::endl;
+    std::cout << "a å•ä½åŒ– = " << a_norm << std::endl;
+    std::cout << "b å•ä½åŒ– = " << b_norm << std::endl;
+    std::cout << "å•ä½åŒ–åé•¿åº¦: " << a_norm.length() << ", " << b_norm.length() << std::endl;
 
     vector3 zero(0, 0, 0);
     vector3 zero_norm = zero.normalized();
-    std::cout << "ÁãÏòÁ¿µ¥Î»»¯ = " << zero_norm << " (Ó¦·µ»Ø×ÔÉí)\n";
+    std::cout << "é›¶å‘é‡å•ä½åŒ– = " << zero_norm << " (åº”è¿”å›è‡ªèº«)\n";
 
     vector3 perp = a.cross(b);
-    std::cout << "\nÑéÖ¤ a ¡Á b ÊÇ·ñ´¹Ö±ÓÚ a ºÍ b:\n";
-    std::cout << "a ¡¤ (a¡Áb) = " << a.dot(perp) << " (Ó¦½Ó½ü 0)\n";
-    std::cout << "b ¡¤ (a¡Áb) = " << b.dot(perp) << " (Ó¦½Ó½ü 0)\n";
+    std::cout << "\néªŒè¯ a Ã— b æ˜¯å¦å‚ç›´äº a å’Œ b:\n";
+    std::cout << "a Â· (aÃ—b) = " << a.dot(perp) << " (åº”æ¥è¿‘ 0)\n";
+    std::cout << "b Â· (aÃ—b) = " << b.dot(perp) << " (åº”æ¥è¿‘ 0)\n";
 
 }
 void matrix4_test()
@@ -95,23 +95,23 @@ void matrix4_test()
     matrix4 T = matrix4::translation(5, 6, 7);
     vector3 p(1, 2, 3);
     vector3 p1 = T.transformPoint(p);
-    std::cout << "Æ½ÒÆ (1,2,3) -> " << p1 << std::endl;  // Ó¦ (6,8,10)
+    std::cout << "å¹³ç§» (1,2,3) -> " << p1 << std::endl;  // åº” (6,8,10)
 
-    // ÈÆ Z ÖáĞı×ª 90 ¶È
+    // ç»• Z è½´æ—‹è½¬ 90 åº¦
     float angle = 3.14159f / 2;
     matrix4 R = matrix4::rotationZ(angle);
     vector3 p2 = R.transformPoint(vector3(1, 0, 0));
-    std::cout << "ÈÆZ×ª90¡ã (1,0,0) -> " << p2 << std::endl;  // Ó¦ (0,1,0)
+    std::cout << "ç»•Zè½¬90Â° (1,0,0) -> " << p2 << std::endl;  // åº” (0,1,0)
 
-    // ÏÈĞı×ªÔÙÆ½ÒÆ
+    // å…ˆæ—‹è½¬å†å¹³ç§»
     matrix4 M = T * R;
     vector3 p3 = M.transformPoint(vector3(1, 0, 0));
-    std::cout << "ÏÈĞı×ªÔÙÆ½ÒÆ (1,0,0) -> " << p3 << std::endl; // Ó¦ (5,7,7)
+    std::cout << "å…ˆæ—‹è½¬å†å¹³ç§» (1,0,0) -> " << p3 << std::endl; // åº” (5,7,7)
 
-    // Ëõ·Å²âÊÔ
+    // ç¼©æ”¾æµ‹è¯•
     matrix4 S = matrix4::scale(2, 2, 2);
     vector3 p4 = S.transformPoint(vector3(1, 2, 3));
-    std::cout << "Ëõ·Å2±¶ (1,2,3) -> " << p4 << std::endl; // Ó¦ (2,4,6)
+    std::cout << "ç¼©æ”¾2å€ (1,2,3) -> " << p4 << std::endl; // åº” (2,4,6)
 }
 void draw_line_test()
 {
@@ -129,24 +129,24 @@ void draw_line_test()
 
     while (window.isOpen())
     {
-        // ´¦Àí´°¿ÚÊÂ¼ş
+        // å¤„ç†çª—å£äº‹ä»¶
         while (auto event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
 
-        // Çå¿Õ´°¿Ú£¨ºÚÉ«±³¾°£©
+        // æ¸…ç©ºçª—å£ï¼ˆé»‘è‰²èƒŒæ™¯ï¼‰
         window.clear(sf::Color::Black);
 
-        // ÓÃÄãµÄ draw_line º¯Êı»­ÈıÌõ²»Í¬ÑÕÉ«µÄÖ±Ïß
+        // ç”¨ä½ çš„ draw_line å‡½æ•°ç”»ä¸‰æ¡ä¸åŒé¢œè‰²çš„ç›´çº¿
 
-        draw_line(window, 100, 100, 700, 500, sf::Color::Red);    // ºìÉ«¶Ô½ÇÏß
-        draw_line(window, 100, 500, 700, 100, sf::Color::Green);  // ÂÌÉ«¶Ô½ÇÏß
-        draw_line(window, 100, 300, 700, 300, sf::Color::Blue);   // À¶É«Ë®Æ½Ïß
+        draw_line(window, 100, 100, 700, 500, sf::Color::Red);    // çº¢è‰²å¯¹è§’çº¿
+        draw_line(window, 100, 500, 700, 100, sf::Color::Green);  // ç»¿è‰²å¯¹è§’çº¿
+        draw_line(window, 100, 300, 700, 300, sf::Color::Blue);   // è“è‰²æ°´å¹³çº¿
 
 
-        // ÏÔÊ¾»æÖÆÄÚÈİ
+        // æ˜¾ç¤ºç»˜åˆ¶å†…å®¹
         window.display();
     }
 }
@@ -181,12 +181,12 @@ void draw_Triangle_test()
 
         std::vector<std::vector<vector3>> heartTriangles =
         {
-            //×ó±ß
+            //å·¦è¾¹
             {{250,100,0} ,{410,250,0},{400,700,0}},
             {{250,100,0} ,{400,700,0},{50,400,0}},
             {{250,100,0} ,{50,400,0}, {50,200,0}},
             {{250,100,0} ,{50,200,0},{130,100,0}},
-            //¶Ô³Æ
+            //å¯¹ç§°
             {{550,100,0} ,{400,700,0},{390,250,0}},
             {{550,100,0} ,{750,400,0},{400,700,0}},
             {{550,100,0} ,{750,200,0},{750,400,0}},
@@ -226,31 +226,31 @@ void rotating_cube_test()
     sf::RenderWindow window(sf::VideoMode({ w, h }), "Rotating Cube");
     window.setFramerateLimit(120);
 
-    // ¶¥µã£¨¾Ö²¿×ø±ê£©
+    // é¡¶ç‚¹ï¼ˆå±€éƒ¨åæ ‡ï¼‰
     vector3 cubeVertex[8] = {
-        {-1,-1,-1}, { 1,-1,-1}, { 1, 1,-1}, {-1, 1,-1},  // Ç°ÃæËÄ¸ö (z=-1)
-        {-1,-1, 1}, { 1,-1, 1}, { 1, 1, 1}, {-1, 1, 1}    // ºóÃæËÄ¸ö (z=1)
+        {-1,-1,-1}, { 1,-1,-1}, { 1, 1,-1}, {-1, 1,-1},  // å‰é¢å››ä¸ª (z=-1)
+        {-1,-1, 1}, { 1,-1, 1}, { 1, 1, 1}, {-1, 1, 1}    // åé¢å››ä¸ª (z=1)
     };
 
-    // 12 ¸öÈı½ÇĞÎ£¨Ã¿¸öÃæÁ½¸ö£¬ÄæÊ±ÕëÈÆĞò£¬´ÓÍâ²¿¿´£©
+    // 12 ä¸ªä¸‰è§’å½¢ï¼ˆæ¯ä¸ªé¢ä¸¤ä¸ªï¼Œé€†æ—¶é’ˆç»•åºï¼Œä»å¤–éƒ¨çœ‹ï¼‰
     int cubeface[12][3] = {
-        {0,1,2}, {0,2,3}, // Ç°Ãæ
-        {5,4,7}, {5,7,6}, // ºóÃæ
-        {0,4,5}, {0,5,1}, // µ×Ãæ
-        {2,6,7}, {2,7,3}, // ¶¥Ãæ
-        {0,3,7}, {0,7,4}, // ×óÃæ
-        {1,5,6}, {1,6,2}  // ÓÒÃæ
+        {0,1,2}, {0,2,3}, // å‰é¢
+        {5,4,7}, {5,7,6}, // åé¢
+        {0,4,5}, {0,5,1}, // åº•é¢
+        {2,6,7}, {2,7,3}, // é¡¶é¢
+        {0,3,7}, {0,7,4}, // å·¦é¢
+        {1,5,6}, {1,6,2}  // å³é¢
     };
 
-    // Ã¿¸öÈı½ÇĞÎµÄÑÕÉ«
+    // æ¯ä¸ªä¸‰è§’å½¢çš„é¢œè‰²
     Color cubeColors[12] =
     {
-        Color(255,0,0), Color(255,0,0),   // Ç°ÃæºìÉ«
-        Color(0,255,0), Color(0,255,0),   // ºóÃæÂÌÉ«
-        Color(0,0,255), Color(0,0,255),   // µ×ÃæÀ¶É«
-        Color(255,255,0), Color(255,255,0), // ¶¥Ãæ»ÆÉ«
-        Color(255,0,255), Color(255,0,255), // ×óÃæ×ÏÉ«
-        Color(0,255,255), Color(0,255,255)  // ÓÒÃæÇàÉ«
+        Color(255,0,0), Color(255,0,0),   // å‰é¢çº¢è‰²
+        Color(0,255,0), Color(0,255,0),   // åé¢ç»¿è‰²
+        Color(0,0,255), Color(0,0,255),   // åº•é¢è“è‰²
+        Color(255,255,0), Color(255,255,0), // é¡¶é¢é»„è‰²
+        Color(255,0,255), Color(255,0,255), // å·¦é¢ç´«è‰²
+        Color(0,255,255), Color(0,255,255)  // å³é¢é’è‰²
     };
 
     float angleX = 0.0f;
@@ -262,7 +262,7 @@ void rotating_cube_test()
     bool texopen=1;
     std::cout << "tex width: " << tex.getWidth() << std::endl;
     if (tex.getWidth() == 0) {
-        std::cerr << "ÎÆÀí¼ÓÔØÊ§°Ü" << std::endl;
+        std::cerr << "çº¹ç†åŠ è½½å¤±è´¥" << std::endl;
     }
 
     while (window.isOpen())
@@ -288,7 +288,7 @@ void rotating_cube_test()
         matrix4 mvp = proj * mv;
 
         vector3 screenVertex[8];
-        vector3 viewVertex[8];//Ğı×ªÎ´Í¸ÊÓµãÖ±½Ç×ø±ê
+        vector3 viewVertex[8];//æ—‹è½¬æœªé€è§†ç‚¹ç›´è§’åæ ‡
 
         for (int i = 0;i < 8;i++)
         {
@@ -305,32 +305,32 @@ void rotating_cube_test()
         }
 
 
-        // Ã¿¸öÃæÁ½¸öÈı½ÇĞÎ£¬¹² 12 ¸öÈı½ÇĞÎ
-        // Ã¿¸öÈı½ÇĞÎµÄÈı¸ö¶¥µã UV
-        //£¨0£¬0£©Ë³Ê±ÕëÒÀ´Î¶ÔÓ¦7546
+        // æ¯ä¸ªé¢ä¸¤ä¸ªä¸‰è§’å½¢ï¼Œå…± 12 ä¸ªä¸‰è§’å½¢
+        // æ¯ä¸ªä¸‰è§’å½¢çš„ä¸‰ä¸ªé¡¶ç‚¹ UV
+        //ï¼ˆ0ï¼Œ0ï¼‰é¡ºæ—¶é’ˆä¾æ¬¡å¯¹åº”7546
         float faceUV[12][3][2] =
         {
-            // Ç°Ãæ
+            // å‰é¢
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
-            // ºóÃæ (ÄãÊµ²â)
+            // åé¢ (ä½ å®æµ‹)
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
-            // µ×Ãæ
+            // åº•é¢
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
-            // ¶¥Ãæ
+            // é¡¶é¢
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
-            // ×óÃæ
+            // å·¦é¢
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}},
-            // ÓÒÃæ
+            // å³é¢
             {{1,1},{1,0},{0,1}}, {{1,0},{0,0},{0,1}}
         };
 
         for (int i = 0; i < 12; i++) {
-            // ¼ÆËã·¨Ïß
+            // è®¡ç®—æ³•çº¿
             vector3 AB = viewVertex[cubeface[i][1]] - viewVertex[cubeface[i][0]];
             vector3 AC = viewVertex[cubeface[i][2]] - viewVertex[cubeface[i][0]];
             vector3 n = AC.cross(AB).normalized();
 
-            // »ñÈ¡µ±Ç°Èı½ÇĞÎµÄ UV
+            // è·å–å½“å‰ä¸‰è§’å½¢çš„ UV
             float u0 = faceUV[i][0][0], v0 = faceUV[i][0][1];
             float u1 = faceUV[i][1][0], v1 = faceUV[i][1][1];
             float u2 = faceUV[i][2][0], v2 = faceUV[i][2][1];
@@ -340,19 +340,19 @@ void rotating_cube_test()
                 cubeColors[i], cubeColors[i], cubeColors[i], n,
                 u0, v0, u1, v1, u2,v2,
                 &tex);
-            bool opentex = true;//ÎÆÀí¿ª¹Ø
-            if(!opentex)tri.disableTexture();//ÎÆÀí¹Ø±Õ
+            bool opentex = true;//çº¹ç†å¼€å…³
+            if(!opentex)tri.disableTexture();//çº¹ç†å…³é—­
             tri.draw_Triangle(fb, proj);
             
         }
 
-        // ÓÃ·½Ïò¼ü¿ØÖÆĞı×ª
+        // ç”¨æ–¹å‘é”®æ§åˆ¶æ—‹è½¬
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))  angleY -= anglev;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) angleY += anglev;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))    angleX -= anglev;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))  angleX += anglev;
         
-        // ÏÔÊ¾...
+        // æ˜¾ç¤º...
         sf::Image image(sf::Vector2u(w, h));
         for (int y = 0; y < h; y++)
             for (int x = 0; x < w; x++)
@@ -369,19 +369,19 @@ void rotating_cube_test()
 }
 int main()
 {
-    //ÄÚ´æ³Ø²âÊÔ
+    //å†…å­˜æ± æµ‹è¯•
     pool_test();
-    //ÖÇÄÜÖ¸Õë²âÊÔ
+    //æ™ºèƒ½æŒ‡é’ˆæµ‹è¯•
     shared_ptr_test();
-    //vector3²âÊÔ
+    //vector3æµ‹è¯•
     vector3_test();
-    //matrix4²âÊÔ
+    //matrix4æµ‹è¯•
     matrix4_test();
-    //bresenham»­ÏßËã·¨²âÊÔ
+    //bresenhamç”»çº¿ç®—æ³•æµ‹è¯•
     draw_line_test();
-    //ÖØĞÄÌî³äÈı½ÇĞÎ»æÖÆ°®ĞÄ²âÊÔ
+    //é‡å¿ƒå¡«å……ä¸‰è§’å½¢ç»˜åˆ¶çˆ±å¿ƒæµ‹è¯•
     draw_Triangle_test();
-    //Ğı×ªÁ¢·½Ìå(Âş·´Éä¸ß¹â)²âÊÔ
+    //æ—‹è½¬ç«‹æ–¹ä½“(æ¼«åå°„é«˜å…‰)æµ‹è¯•
     rotating_cube_test();
     
 }
