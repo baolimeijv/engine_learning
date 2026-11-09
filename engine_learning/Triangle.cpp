@@ -1,7 +1,7 @@
 ﻿#include "Triangle.h"
 #include <cmath>
-bool lightopen = true;//光照开光
-bool hightlight = true;//高光开关
+bool lightopen = false;//光照开光
+bool hightlight = false;//高光开关
 Triangle::Triangle(const vector3& v0, const vector3& v1, const vector3& v2,
 	const Color& color0, const Color& color1, const Color& color2, const vector3& n, 
 	float a0, float b0, float a1, float b1, float a2, float b2, Texture2D* tex) 

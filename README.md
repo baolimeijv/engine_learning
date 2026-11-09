@@ -2,6 +2,10 @@
 
 C++17 实现的软件渲染器，**不使用任何图形 API**。SFML 仅用于窗口创建、图像加载与像素显示。
 
+![演示：无纹理 → 纹理映射 → Blinn-Phong 光照](engine_learning/demo.gif)
+
+[完整演示视频（25 秒）](engine_learning/demo.mp4)
+
 ## 已实现模块
 
 - **定长内存池** — 空闲链表管理、内存对齐（[笔记](engine_learning/memory_pool.md)）

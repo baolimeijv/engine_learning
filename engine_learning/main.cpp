@@ -340,7 +340,7 @@ void rotating_cube_test()
                 cubeColors[i], cubeColors[i], cubeColors[i], n,
                 u0, v0, u1, v1, u2,v2,
                 &tex);
-            bool opentex = true;//纹理开关
+            bool opentex = false;//纹理开关
             if(!opentex)tri.disableTexture();//纹理关闭
             tri.draw_Triangle(fb, proj);
             
